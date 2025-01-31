@@ -146,11 +146,11 @@ public OnPluginStart()
     
     if (g_Cvar_Winlimit != INVALID_HANDLE || g_Cvar_Maxrounds != INVALID_HANDLE)
     {
-        HookEvent("round_end", Event_RoundEnd);
         HookEventEx("teamplay_win_panel", Event_TeamPlayWinPanel);
         HookEventEx("teamplay_restart_round", Event_TFRestartRound);
         HookEventEx("arena_win_panel", Event_TeamPlayWinPanel);
         //****** NEOTOKYO Modification Start ******
+        HookEvent("game_round_end", Event_RoundEnd);
         HookEvent("game_round_start", Event_RoundRestrat, EventHookMode_PostNoCopy);
         //****** NEOTOKYO Modification End ******
     }
