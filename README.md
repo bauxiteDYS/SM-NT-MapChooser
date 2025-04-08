@@ -1,3 +1,3 @@
 # SM-NT-MapChooser  
 
-Some stuff for comp
+Some stuff for comp, requires `nt_competitive` plugin.
