@@ -127,7 +127,11 @@ public void OnPluginStart()
 	g_OldMapList = new ArrayList(arraySize);
 	g_NextMapList = new ArrayList(arraySize);
 	
-	g_Cvar_EndOfMapVote = CreateConVar("sm_mapvote_endvote", "1", "Specifies if MapChooser should run an end of map vote", _, true, 0.0, true, 1.0);
+	g_Cvar_EndOfMapVote = CreateConVar("sm_mapvote_endvote", "0", "Specifies if MapChooser should run an end of map vote", _, true, 0.0, true, 1.0);
+
+	//****** NEOTOKYO Modification Start ******
+	//Some cvar defaults have been changed for NT
+	//****** NEOTOKYO Modification End ******
 
 	g_Cvar_StartTime = CreateConVar("sm_mapvote_start", "3.0", "Specifies when to start the vote based on time remaining.", _, true, 1.0);
 	g_Cvar_StartRounds = CreateConVar("sm_mapvote_startround", "2.0", "Specifies when to start the vote based on rounds remaining. Use 0 on TF2 to start vote during bonus round time", _, true, 0.0);
@@ -135,15 +139,15 @@ public void OnPluginStart()
 	g_Cvar_ExtendTimeStep = CreateConVar("sm_extendmap_timestep", "15", "Specifies how much many more minutes each extension makes", _, true, 5.0);
 	g_Cvar_ExtendRoundStep = CreateConVar("sm_extendmap_roundstep", "5", "Specifies how many more rounds each extension makes", _, true, 1.0);
 	g_Cvar_ExtendFragStep = CreateConVar("sm_extendmap_fragstep", "10", "Specifies how many more frags are allowed when map is extended.", _, true, 5.0);	
-	g_Cvar_ExcludeMaps = CreateConVar("sm_mapvote_exclude", "5", "Specifies how many past maps to exclude from the vote.", _, true, 0.0);
+	g_Cvar_ExcludeMaps = CreateConVar("sm_mapvote_exclude", "1", "Specifies how many past maps to exclude from the vote.", _, true, 0.0);
 	g_Cvar_IncludeMaps = CreateConVar("sm_mapvote_include", "6", "Specifies how many maps to include in the vote.", _, true, 2.0, true, 6.0);
 	g_Cvar_PersistentMaps = CreateConVar("sm_mapvote_persistentmaps", "0", "Specifies if previous maps should be stored persistently.", _, true, 0.0, true, 1.0);
 	g_Cvar_NoVoteMode = CreateConVar("sm_mapvote_novote", "1", "Specifies whether or not MapChooser should pick a map if no votes are received.", _, true, 0.0, true, 1.0);
 	g_Cvar_Extend = CreateConVar("sm_mapvote_extend", "1", "Number of extensions allowed each map.", _, true, 0.0);
 	g_Cvar_DontChange = CreateConVar("sm_mapvote_dontchange", "1", "Specifies if a 'Don't Change' option should be added to early votes", _, true, 0.0);
-	g_Cvar_VoteDuration = CreateConVar("sm_mapvote_voteduration", "33", "Specifies how long the mapvote should be available for.", _, true, 5.0);
-	g_Cvar_RunOff = CreateConVar("sm_mapvote_runoff", "0", "Hold runoff votes if winning choice is less than a certain margin", _, true, 0.0, true, 1.0);
-	g_Cvar_RunOffPercent = CreateConVar("sm_mapvote_runoffpercent", "50", "If winning choice has less than this percent of votes, hold a runoff", _, true, 0.0, true, 100.0);
+	g_Cvar_VoteDuration = CreateConVar("sm_mapvote_voteduration", "35", "Specifies how long the mapvote should be available for.", _, true, 5.0);
+	g_Cvar_RunOff = CreateConVar("sm_mapvote_runoff", "1", "Hold runoff votes if winning choice is less than a certain margin", _, true, 0.0, true, 1.0);
+	g_Cvar_RunOffPercent = CreateConVar("sm_mapvote_runoffpercent", "40", "If winning choice has less than this percent of votes, hold a runoff", _, true, 0.0, true, 100.0);
 	
 	RegAdminCmd("sm_mapvote", Command_Mapvote, ADMFLAG_CHANGEMAP, "sm_mapvote - Forces MapChooser to attempt to run a map vote now.");
 	RegAdminCmd("sm_setnextmap", Command_SetNextmap, ADMFLAG_CHANGEMAP, "sm_setnextmap <map>");
@@ -179,6 +183,8 @@ public void OnPluginStart()
 		{
 			//****** NEOTOKYO Modification Start ******
 			HookEvent("game_round_start", Event_RoundStart, EventHookMode_Pre);
+			// We aren't changing round end for now, as the round end in NT doesn't seem very reliable and is basically called right before round start
+			// So we'll just use round start modification
 			//****** NEOTOKYO Modification End ******
 			
 			HookEvent("round_end", Event_RoundEnd);
@@ -204,6 +210,8 @@ public void OnPluginStart()
 }
 
 //****** NEOTOKYO Modification Start ******
+// We check winlimit and force the map to change to avoid a bug where the game or plugin tries to change map and gets stuck in a loop?
+// Probably need to improve this but it works for what we're doing at the moment in NT.
 public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	bool ChangeMapNow;
@@ -285,7 +293,7 @@ public void OnConfigsExecuted()
 	if (ReadMapList(g_MapList,
 					 g_mapFileSerial, 
 					 "mapchooser",
-					 MAPLIST_FLAG_CLEARARRAY|MAPLIST_FLAG_MAPSFOLDER)
+					 MAPLIST_FLAG_CLEARARRAY|MAPLIST_FLAG_NO_DEFAULT)
 		!= null)
 		
 	{
@@ -882,6 +890,7 @@ public void Handler_VoteFinishedGeneric(Menu menu,
 		g_MapVoteCompleted = true;
 		
 		PrintToChatAll("[SM] %t", "Nextmap Voting Finished", displayName, RoundToFloor(float(item_info[0][VOTEINFO_ITEM_VOTES])/float(num_votes)*100), num_votes);
+		PrintToConsoleAll("[SM] %t", "Nextmap Voting Finished", displayName, RoundToFloor(float(item_info[0][VOTEINFO_ITEM_VOTES])/float(num_votes)*100), num_votes);
 		LogAction(-1, -1, "Voting for next map has finished. Nextmap: %s.", map);
 	}	
 }
