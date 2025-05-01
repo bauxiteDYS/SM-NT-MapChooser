@@ -131,7 +131,7 @@ public void OnPluginStart()
 	g_Cvar_EndOfMapVote = CreateConVar("sm_mapvote_endvote", "0", "Specifies if MapChooser should run an end of map vote", _, true, 0.0, true, 1.0);
 
 	//****** NEOTOKYO Modification Start ******
-	Some cvar defaults have been changed for NT
+	//Some cvar defaults have been changed for NT
 	//****** NEOTOKYO Modification End ******
 
 	g_Cvar_StartTime = CreateConVar("sm_mapvote_start", "3.0", "Specifies when to start the vote based on time remaining.", _, true, 1.0);
@@ -148,7 +148,7 @@ public void OnPluginStart()
 	g_Cvar_DontChange = CreateConVar("sm_mapvote_dontchange", "1", "Specifies if a 'Don't Change' option should be added to early votes", _, true, 0.0);
 	g_Cvar_VoteDuration = CreateConVar("sm_mapvote_voteduration", "35", "Specifies how long the mapvote should be available for.", _, true, 5.0);
 	g_Cvar_RunOff = CreateConVar("sm_mapvote_runoff", "1", "Hold runoff votes if winning choice is less than a certain margin", _, true, 0.0, true, 1.0);
-	g_Cvar_RunOffPercent = CreateConVar("sm_mapvote_runoffpercent", "33", "If winning choice has less than this percent of votes, hold a runoff", _, true, 0.0, true, 100.0);
+	g_Cvar_RunOffPercent = CreateConVar("sm_mapvote_runoffpercent", "40", "If winning choice has less than this percent of votes, hold a runoff", _, true, 0.0, true, 100.0);
 	
 	RegAdminCmd("sm_mapvote", Command_Mapvote, ADMFLAG_CHANGEMAP, "sm_mapvote - Forces MapChooser to attempt to run a map vote now.");
 	RegAdminCmd("sm_setnextmap", Command_SetNextmap, ADMFLAG_CHANGEMAP, "sm_setnextmap <map>");
