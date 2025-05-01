@@ -139,7 +139,7 @@ public void OnPluginStart()
 	g_Cvar_ExtendTimeStep = CreateConVar("sm_extendmap_timestep", "15", "Specifies how much many more minutes each extension makes", _, true, 5.0);
 	g_Cvar_ExtendRoundStep = CreateConVar("sm_extendmap_roundstep", "5", "Specifies how many more rounds each extension makes", _, true, 1.0);
 	g_Cvar_ExtendFragStep = CreateConVar("sm_extendmap_fragstep", "10", "Specifies how many more frags are allowed when map is extended.", _, true, 5.0);	
-	g_Cvar_ExcludeMaps = CreateConVar("sm_mapvote_exclude", "1", "Specifies how many past maps to exclude from the vote.", _, true, 0.0);
+	g_Cvar_ExcludeMaps = CreateConVar("sm_mapvote_exclude", "5", "Specifies how many past maps to exclude from the vote.", _, true, 0.0);
 	g_Cvar_IncludeMaps = CreateConVar("sm_mapvote_include", "6", "Specifies how many maps to include in the vote.", _, true, 2.0, true, 6.0);
 	g_Cvar_PersistentMaps = CreateConVar("sm_mapvote_persistentmaps", "0", "Specifies if previous maps should be stored persistently.", _, true, 0.0, true, 1.0);
 	g_Cvar_NoVoteMode = CreateConVar("sm_mapvote_novote", "1", "Specifies whether or not MapChooser should pick a map if no votes are received.", _, true, 0.0, true, 1.0);
@@ -293,7 +293,7 @@ public void OnConfigsExecuted()
 	if (ReadMapList(g_MapList,
 					 g_mapFileSerial, 
 					 "mapchooser",
-					 MAPLIST_FLAG_CLEARARRAY|MAPLIST_FLAG_NO_DEFAULT)
+					 MAPLIST_FLAG_CLEARARRAY|MAPLIST_FLAG_MAPSFOLDER)
 		!= null)
 		
 	{
