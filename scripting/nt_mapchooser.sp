@@ -36,9 +36,9 @@
 #include <sourcemod>
 #include <mapchooser>
 #include <nextmap>
-#include <nt_competitive/nt_competitive_natives>
 
 //****** NEOTOKYO Modification Start ******
+#include <nt_competitive/nt_competitive_natives>
 #include <sdktools>
 //****** NEOTOKYO Modification End ******
 
@@ -49,7 +49,7 @@ public Plugin myinfo =
 	name = "NT MapChooser",
 	author = "SoftAsHell?, bauxite",
 	description = "NT Map Voting",
-	version = "0.1.1",
+	version = "0.1.1.6939",
 	url = ""
 };
 
@@ -130,6 +130,10 @@ public void OnPluginStart()
 	
 	g_Cvar_EndOfMapVote = CreateConVar("sm_mapvote_endvote", "0", "Specifies if MapChooser should run an end of map vote", _, true, 0.0, true, 1.0);
 
+	//****** NEOTOKYO Modification Start ******
+	Some cvar defaults have been changed for NT
+	//****** NEOTOKYO Modification End ******
+
 	g_Cvar_StartTime = CreateConVar("sm_mapvote_start", "3.0", "Specifies when to start the vote based on time remaining.", _, true, 1.0);
 	g_Cvar_StartRounds = CreateConVar("sm_mapvote_startround", "2.0", "Specifies when to start the vote based on rounds remaining. Use 0 on TF2 to start vote during bonus round time", _, true, 0.0);
 	g_Cvar_StartFrags = CreateConVar("sm_mapvote_startfrags", "5.0", "Specifies when to start the vote base on frags remaining.", _, true, 1.0);
@@ -180,6 +184,8 @@ public void OnPluginStart()
 		{
 			//****** NEOTOKYO Modification Start ******
 			HookEvent("game_round_start", Event_RoundStart, EventHookMode_Pre);
+			// We aren't changing round end for now, as the round end in NT doesn't seem very reliable and is basically called right before round start
+			// So we'll just use round start modification
 			//****** NEOTOKYO Modification End ******
 			
 			HookEvent("round_end", Event_RoundEnd);
@@ -205,6 +211,8 @@ public void OnPluginStart()
 }
 
 //****** NEOTOKYO Modification Start ******
+// We check winlimit and force the map to change to avoid a bug where the game or plugin tries to change map and gets stuck in a loop?
+// Probably need to improve this but it works for what we're doing at the moment in NT.
 public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	bool ChangeMapNow;
@@ -1094,8 +1102,11 @@ void CreateNextVote()
 
 bool CanVoteStart()
 {
+	//****** NEOTOKYO Modification Start ******
 	if (g_WaitingForVote || g_HasVoteStarted || Competitive_IsLive())
 	{
+	// Modification for comp, so maps cannot be rtv'ed etc while live.
+	//****** NEOTOKYO Modification End ******
 		return false;	
 	}
 	
