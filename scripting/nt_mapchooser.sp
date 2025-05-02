@@ -46,7 +46,7 @@
 
 public Plugin myinfo =
 {
-	name = "NT MapChooser",
+	name = "NT MapChooser Comp",
 	author = "SoftAsHell?, bauxite",
 	description = "NT Map Voting",
 	version = "0.1.1.6939",
